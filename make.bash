@@ -6,8 +6,8 @@ function try () {
 
 [ -z "$ANDROID_NDK_HOME" ] && ANDROID_NDK_HOME=~/android-ndk-r12b
 
-DIR=$(pwd)/src
-MIN_API=$1
+DIR=$(pwd)
+MIN_API=19
 DEPS=$(pwd)/.deps
 ANDROID_ARM_TOOLCHAIN=$DEPS/android-toolchain-${MIN_API}-arm
 ANDROID_X86_TOOLCHAIN=$DEPS/android-toolchain-${MIN_API}-x86
@@ -18,7 +18,7 @@ ANDROID_ARM_STRIP=$ANDROID_ARM_TOOLCHAIN/bin/arm-linux-androideabi-strip
 ANDROID_X86_CC=$ANDROID_X86_TOOLCHAIN/bin/i686-linux-android-gcc
 ANDROID_X86_STRIP=$ANDROID_X86_TOOLCHAIN/bin/i686-linux-android-strip
 
-try mkdir -p $DEPS $DIR/main/libs/armeabi-v7a $DIR/main/libs/x86
+try mkdir -p $DEPS $DIR/libs/armeabi-v7a $DIR/libs/x86
 
 if [ ! -d "$ANDROID_ARM_TOOLCHAIN" ]; then
     echo "Make standalone toolchain for ARM arch"
@@ -46,22 +46,21 @@ export GOBIN=$GOPATH/bin
 mkdir -p $GOBIN
 export PATH=$GOROOT/bin:$PATH
 
-pushd $DIR/src
+pushd $DIR/overture
 
 echo "Get dependences for overture"
-# go get -u github.com/xtaci/kcp-go
-# go get -u github.com/xtaci/smux
+go get -u github.com/holyshawn/overture/core
 go get
 
 echo "Cross compile overture for arm"
 try env CGO_ENABLED=1 CC=$ANDROID_ARM_CC GOOS=android GOARCH=arm GOARM=7 go build -ldflags="-s -w"
-# try $ANDROID_ARM_STRIP client
-# try mv client $DIR/main/libs/armeabi-v7a/liboverture.so
+try $ANDROID_ARM_STRIP overture
+try mv overture $DIR/libs/armeabi-v7a/liboverture.so
 
 echo "Cross compile overture for x86"
 try env CGO_ENABLED=1 CC=$ANDROID_X86_CC GOOS=android GOARCH=386 go build -ldflags="-s -w"
-# try $ANDROID_X86_STRIP client
-# try mv client $DIR/main/libs/x86/liboverture.so
+try $ANDROID_X86_STRIP overture
+try mv overture $DIR/libs/x86/liboverture.so
 popd
 
 echo "Successfully build overture"
