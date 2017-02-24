@@ -95,6 +95,8 @@ func main() {
 		log.SetLevel(log.InfoLevel)
 	}
 
+	log_init()
+
 	if vpn {
 		path := "protect_path"
 
