@@ -86,7 +86,7 @@ func main() {
 	flag.StringVar(&configPath, "c", "./config.json", "config file path")
 	flag.BoolVar(&logVerbose, "v", false, "verbose mode")
 	flag.IntVar(&processorNumber, "p", runtime.NumCPU(), "number of processor to use")
-	flag.BoolVar(&vpn, "V", true, "VPN mode")
+	flag.BoolVar(&vpn, "V", false, "VPN mode")
 	flag.Parse()
 
 	if logVerbose {
