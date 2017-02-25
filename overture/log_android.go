@@ -33,7 +33,7 @@ import (
 )
 
 var (
-	ctag = C.CString("kcptun")
+	ctag = C.CString("overture")
 )
 
 type infoWriter struct{}
