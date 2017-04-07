@@ -71,7 +71,7 @@ import (
 	"syscall"
 
 	log "github.com/Sirupsen/logrus"
-	"github.com/holyshawn/overture/core"
+	"github.com/shawn1m/overture/core"
 )
 
 func main() {
