@@ -61,7 +61,7 @@ export PATH=$GOROOT/bin:$PATH
 pushd $DIR/overture
 
 echo "Get dependences for overture"
-go get -u github.com/holyshawn/overture/core
+go get -u github.com/shawn1m/overture/core
 go get
 
 echo "Cross compile overture for arm"
