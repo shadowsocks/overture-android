@@ -54,30 +54,30 @@ fi
 
 export GOROOT=$DIR/go
 export GOPATH=$DEPS/gopath
-export GOBIN=$GOPATH/bin
-mkdir -p $GOBIN
-export PATH=$GOROOT/bin:$PATH
-
-pushd $DIR/overture
+export PATH=$GOROOT/bin:$GOPATH/bin:$PATH
 
 echo "Get dependences for overture"
-go get -u github.com/shawn1m/overture/core
-go get
+go get -u github.com/tools/godep
+go get -u github.com/shadowsocks/overture/main
+
+pushd $GOPATH/src/github.com/shadowsocks/overture/main
+godep restore
 
 echo "Cross compile overture for arm"
 try env CGO_ENABLED=1 CC=$ANDROID_ARM_CC GOOS=android GOARCH=arm GOARM=7 go build -ldflags="-s -w"
-try $ANDROID_ARM_STRIP overture
-try mv overture $TARGET/armeabi-v7a/liboverture.so
+try $ANDROID_ARM_STRIP main
+try mv main $TARGET/armeabi-v7a/liboverture.so
 
 echo "Cross compile overture for arm64"
 try env CGO_ENABLED=1 CC=$ANDROID_ARM64_CC GOOS=android GOARCH=arm64 go build -ldflags="-s -w"
-try $ANDROID_ARM64_STRIP overture
-try mv overture $TARGET/arm64-v8a/liboverture.so
+try $ANDROID_ARM64_STRIP main
+try mv main $TARGET/arm64-v8a/liboverture.so
 
 echo "Cross compile overture for x86"
 try env CGO_ENABLED=1 CC=$ANDROID_X86_CC GOOS=android GOARCH=386 go build -ldflags="-s -w"
-try $ANDROID_X86_STRIP overture
-try mv overture $TARGET/x86/liboverture.so
+try $ANDROID_X86_STRIP main
+try mv main $TARGET/x86/liboverture.so
+
 popd
 
 echo "Successfully build overture"
